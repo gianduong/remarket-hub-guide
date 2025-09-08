@@ -31,7 +31,7 @@ export function ServiceCard({
   icon
 }: ServiceCardProps) {
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 border-border/50">
+    <Card className="hover:shadow-lg transition-all duration-200 border-border/50 h-full flex flex-col">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -62,12 +62,14 @@ export function ServiceCard({
         </div>
       </CardHeader>
       
-      <CardContent>
-        <div className="space-y-3 mb-4">
+      <CardContent className="flex-1">
+        <div className="space-y-2 mb-4">
           {details.map((detail, index) => (
-            <div key={index} className="flex justify-between items-center py-2 border-b border-border/30 last:border-0">
-              <span className="text-sm font-medium text-muted-foreground">{detail.label}:</span>
-              <span className="text-sm text-card-foreground font-mono">{detail.value}</span>
+            <div key={index} className="space-y-1">
+              <div className="text-xs font-medium text-muted-foreground">{detail.label}:</div>
+              <div className="text-xs text-card-foreground font-mono bg-muted/50 p-2 rounded text-center truncate">
+                {detail.value}
+              </div>
             </div>
           ))}
         </div>
