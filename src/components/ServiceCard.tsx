@@ -1,8 +1,23 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Settings, Edit3 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { AlertTriangle } from "lucide-react";
+import { useState } from "react";
 
 interface ServiceDetail {
   label: string;
@@ -28,64 +43,110 @@ export function ServiceCard({
   details,
   actionLabel,
   onAction,
-  icon
+  icon,
 }: ServiceCardProps) {
+  const [showWarningModal, setShowWarningModal] = useState(false);
+
+  const handleToggle = (checked: boolean) => {
+    if (checked) {
+      // If activating service, activate immediately
+      onToggle(true);
+    } else {
+      // If deactivating service, show warning modal
+      setShowWarningModal(true);
+    }
+  };
+
+  const handleConfirmDeactivate = () => {
+    onToggle(false);
+    setShowWarningModal(false);
+  };
+
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 border-border/50 h-full flex flex-col">
+    <>
+      <Card className="hover:shadow-lg transition-all duration-200 border-border/50 h-full flex flex-col">
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {icon && (
-              <div className="p-2 rounded-lg bg-primary/10">
-                {icon}
-              </div>
-            )}
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-3">
+            {icon && <>{icon}</>}
             <div>
-              <CardTitle className="text-lg font-semibold text-card-foreground">{title}</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground mt-1">{description}</CardDescription>
+              <div className="flex item-center justify-between">
+                <CardTitle className="text-lg font-semibold text-card-foreground">
+                  {title}
+                </CardTitle>
+                <Switch
+                  checked={isActive}
+                  onCheckedChange={handleToggle}
+                  className="data-[state=checked]:bg-success"
+                />
+              </div>
+              <CardDescription className="text-sm text-muted-foreground mt-1">
+                {description}
+              </CardDescription>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Badge variant={isActive ? "default" : "secondary"} className={
-              isActive 
-                ? "bg-success text-success-foreground" 
-                : "bg-muted text-muted-foreground"
-            }>
-              {isActive ? "On" : "Off"}
-            </Badge>
-            <Switch 
-              checked={isActive} 
-              onCheckedChange={onToggle}
-              className="data-[state=checked]:bg-success"
-            />
-          </div>
+          <div className="flex items-center gap-3"></div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-1">
         <div className="space-y-2 mb-4">
           {details.map((detail, index) => (
             <div key={index} className="space-y-1">
-              <div className="text-xs font-medium text-muted-foreground">{detail.label}:</div>
+              <div className="text-xs font-medium text-muted-foreground">
+                {detail.label}:
+              </div>
               <div className="text-xs text-card-foreground font-mono bg-muted/50 p-2 rounded text-center truncate">
                 {detail.value}
               </div>
             </div>
           ))}
         </div>
-        
-        {actionLabel && onAction && (
-          <Button 
-            onClick={onAction} 
-            variant="outline" 
+
+        {/* {actionLabel && onAction && (
+          <Button
+            onClick={onAction}
+            variant="outline"
             size="sm"
             className="w-full bg-card hover:bg-accent"
           >
-            {isActive ? <Edit3 className="w-4 h-4 mr-2" /> : <Settings className="w-4 h-4 mr-2" />}
+            {isActive ? (
+              <Edit3 className="w-4 h-4 mr-2" />
+            ) : (
+              <Settings className="w-4 h-4 mr-2" />
+            )}
             {actionLabel}
           </Button>
-        )}
+        )} */}
       </CardContent>
     </Card>
+
+    {/* Warning modal when deactivating service */}
+    <AlertDialog open={showWarningModal} onOpenChange={setShowWarningModal}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <AlertDialogTitle>Warning: Deactivate Service</AlertDialogTitle>
+          </div>
+          <AlertDialogDescription className="pt-2">
+            Are you sure you want to deactivate <strong>{title}</strong>? 
+            <br /><br />
+            When deactivated, this service will not function and may affect related features. 
+            You can reactivate it at any time.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction 
+            onClick={handleConfirmDeactivate}
+            className="bg-black hover:bg-gray-800 text-white"
+          >
+            Deactivate Service
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
