@@ -2,7 +2,9 @@ import { useState } from "react";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, Tag, Target } from "lucide-react";
+import googleTagManagerLogo from "@/assets/google-tag-manager-logo.png";
+import googleAnalyticsLogo from "@/assets/google-analytics-logo.png";
+import googleAdsLogo from "@/assets/google-ads-logo.png";
 
 export default function GoogleSetup() {
   const [gtmActive, setGtmActive] = useState(true);
@@ -20,16 +22,12 @@ export default function GoogleSetup() {
     { label: "GA4 Property Name", value: "TRAKPILOT Rin test's property175688575143434" },
     { label: "GA4 Data Stream Name", value: "TRAKPILOT DataStream 175688575299935" },
     { label: "GA4 measurement ID", value: "G-3N58J2JPZ" },
-    { label: "Total events tracking", value: "9" },
-    { label: "Tracking value setting", value: "Total Price" },
-    { label: "Product identifier", value: "Product id" }
+    { label: "Total events tracking", value: "9" }
   ];
 
   const adsDetails = [
     { label: "Conversion id", value: "null" },
-    { label: "Total events tracking", value: "0" },
-    { label: "Tracking value setting", value: "N/A" },
-    { label: "Product identifier", value: "N/A" }
+    { label: "Total events tracking", value: "0" }
   ];
 
   const activeServices = [gtmActive, ga4Active, adsActive].filter(Boolean).length;
@@ -70,7 +68,7 @@ export default function GoogleSetup() {
             details={gtmDetails}
             actionLabel="Edit"
             onAction={() => console.log("Edit GTM")}
-            icon={<Tag className="w-5 h-5 text-primary" />}
+            icon={<img src={googleTagManagerLogo} alt="GTM" className="w-5 h-5" />}
           />
 
           <ServiceCard
@@ -81,7 +79,7 @@ export default function GoogleSetup() {
             details={ga4Details}
             actionLabel="Setting up"
             onAction={() => console.log("Setup GA4")}
-            icon={<BarChart3 className="w-5 h-5 text-primary" />}
+            icon={<img src={googleAnalyticsLogo} alt="GA4" className="w-5 h-5" />}
           />
 
           <ServiceCard
@@ -92,7 +90,7 @@ export default function GoogleSetup() {
             details={adsDetails}
             actionLabel="Setting up"
             onAction={() => console.log("Setup Ads Remarketing")}
-            icon={<Target className="w-5 h-5 text-primary" />}
+            icon={<img src={googleAdsLogo} alt="Google Ads" className="w-5 h-5" />}
           />
         </div>
 
