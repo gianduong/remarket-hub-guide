@@ -22,7 +22,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { AlertTriangle, Info } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { AlertTriangle, Info, Copy } from "lucide-react";
 import { useState } from "react";
 
 interface ServiceDetail {
@@ -52,6 +53,7 @@ export function ServiceCard({
   icon,
 }: ServiceCardProps) {
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const { toast } = useToast();
 
   const handleToggle = (checked: boolean) => {
     if (checked) {
@@ -66,6 +68,24 @@ export function ServiceCard({
   const handleConfirmDeactivate = () => {
     onToggle(false);
     setShowWarningModal(false);
+  };
+
+  const handleCopyValue = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({
+        title: "Copied!",
+        description: "Value copied to clipboard",
+        duration: 2000,
+      });
+    } catch (err) {
+      toast({
+        title: "Copy failed",
+        description: "Failed to copy value to clipboard",
+        variant: "destructive",
+        duration: 2000,
+      });
+    }
   };
 
   return (
@@ -117,8 +137,13 @@ export function ServiceCard({
                   </TooltipProvider>
                 )}
               </div>
-              <div className="text-xs text-card-foreground font-mono bg-muted/50 p-2 rounded text-center truncate">
+              <div 
+                className="text-xs text-card-foreground font-mono bg-muted/50 p-2 rounded text-center truncate cursor-pointer hover:bg-muted/70 transition-colors group relative"
+                onClick={() => handleCopyValue(detail.value)}
+                title="Click to copy"
+              >
                 {detail.value}
+                <Copy className="h-3 w-3 absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </div>
           ))}
