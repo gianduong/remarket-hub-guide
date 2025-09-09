@@ -38,6 +38,8 @@ export default function GoogleSetup() {
   const adsDetails = [
     { label: "Conversion id", value: "null" },
     { label: "Total events tracking", value: "0" },
+    { label: "Tracking value setting", value: "Total Price" },
+    { label: "Product identifier", value: "Product Id" },
   ];
 
   const activeServices = [gtmActive, ga4Active, adsActive].filter(

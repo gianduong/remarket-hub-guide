@@ -16,7 +16,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { AlertTriangle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { AlertTriangle, Info } from "lucide-react";
 import { useState } from "react";
 
 interface ServiceDetail {
@@ -93,8 +99,23 @@ export function ServiceCard({
         <div className="space-y-2 mb-4">
           {details.map((detail, index) => (
             <div key={index} className="space-y-1">
-              <div className="text-xs font-medium text-muted-foreground">
+              <div className="text-xs font-medium text-muted-foreground flex items-center gap-1">
                 {detail.label}:
+                {detail.label === "Product identifier" && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-3 w-3 text-blue-500 hover:text-blue-600 cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">
+                          This Product ID must match the Product ID in Google Merchant Center 
+                          to ensure high catalog match rate and effective remarketing.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
               </div>
               <div className="text-xs text-card-foreground font-mono bg-muted/50 p-2 rounded text-center truncate">
                 {detail.value}
